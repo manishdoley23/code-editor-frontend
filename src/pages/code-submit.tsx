@@ -46,8 +46,6 @@ const CodeSubmit = () => {
 			try {
 				const response = await fetch(url, options);
 				const result = await response.text();
-				console.log(result);
-
 				const token = JSON.parse(result);
 				checkStatus(token.token);
 			} catch (error) {
@@ -89,11 +87,7 @@ const CodeSubmit = () => {
 
 		try {
 			const response = await fetch(url, options);
-
 			const result = JSON.parse(await response.text());
-
-			console.log("result:", result);
-
 			const statusId = result.status_id;
 
 			if (statusId === 3) {
@@ -101,7 +95,7 @@ const CodeSubmit = () => {
 					...prev,
 					submissions: atob(result.stdout),
 				}));
-				saveToDb();
+				saveToDb(atob(result.stdout));
 			} else if (statusId === 1 || statusId === 2) {
 				setTimeout(() => {
 					checkStatus(token);
@@ -116,13 +110,11 @@ const CodeSubmit = () => {
 		}
 	};
 
-	const saveToDb = async () => {
-		console.log("formval:", formVal);
-
+	const saveToDb = async (submission: string) => {
 		const objToSend = {
 			code: formVal.code,
 			stdInt: formVal.stdInt,
-			submissions: formVal.submissions,
+			submissions: submission,
 			username: formVal.username,
 			prefLang: formVal.prefLang.lang,
 		};
@@ -142,7 +134,7 @@ const CodeSubmit = () => {
 			console.log("response:", response.status);
 
 			if (response.status === 200) {
-				navigate("/result");
+				navigate(`/result`);
 			} else {
 				toast("Error in code submission");
 			}
