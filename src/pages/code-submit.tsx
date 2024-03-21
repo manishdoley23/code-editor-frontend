@@ -17,9 +17,11 @@ const CodeSubmit = () => {
 		stdInt: "",
 		submissions: "",
 	});
+	const [processing, setProcessing] = useState(false);
 
 	const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		setProcessing(true);
 
 		const formData = {
 			language_id: formVal.prefLang.id,
@@ -49,26 +51,12 @@ const CodeSubmit = () => {
 				const token = JSON.parse(result);
 				checkStatus(token.token);
 			} catch (error) {
+				setProcessing(false);
 				console.error(error);
 			}
-
-			// const response = await fetch("http://localhost:9999/submitCode", {
-			// 	method: "POST",
-			// 	headers: {
-			// 		"Content-type": "Application/json",
-			// 	},
-			// 	body: JSON.stringify(formVal),
-			// });
-
-			// console.log("response:", response.status);
-
-			// if (response.status === 200) {
-			// 	navigate("/result");
-			// } else {
-			// 	toast("Error in code submission");
-			// }
 		} catch (error) {
 			toast("Error in code submission");
+			setProcessing(false);
 			throw new Error("Error");
 		}
 	};
@@ -103,9 +91,11 @@ const CodeSubmit = () => {
 				return;
 			} else {
 				toast("Error in code submission");
+				setProcessing(false);
 				return;
 			}
 		} catch (error) {
+			setProcessing(false);
 			console.error(error);
 		}
 	};
@@ -121,7 +111,7 @@ const CodeSubmit = () => {
 
 		try {
 			const response = await fetch(
-				`${import.meta.env.VITE_DEV_BACKEND}/submitCode`,
+				`${import.meta.env.VITE_BACKEND}/submitCode`,
 				{
 					method: "POST",
 					headers: {
@@ -134,11 +124,14 @@ const CodeSubmit = () => {
 			console.log("response:", response.status);
 
 			if (response.status === 200) {
+				setProcessing(false);
 				navigate(`/result`);
 			} else {
 				toast("Error in code submission");
+				setProcessing(false);
 			}
 		} catch (error) {
+			setProcessing(false);
 			toast("Error while saving to db");
 		}
 	};
@@ -249,10 +242,12 @@ const CodeSubmit = () => {
 					/>
 				</div>
 				<button
-					className="mt-3 border border-black font-bold w-full px-2 py-2 hover:bg-black hover:text-white"
+					className={`mt-3 border border-black font-bold w-full px-2 py-2 hover:bg-black hover:text-white ${
+						processing && "bg-black text-white pointer-events-none"
+					}`}
 					type="submit"
 				>
-					SUBMIT
+					{processing ? "PROCESSING..." : "SUBMIT"}
 				</button>
 			</form>
 		</div>

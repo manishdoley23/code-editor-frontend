@@ -1,7 +1,3 @@
-export const classnames = (...args: Array<string>) => {
-	return args.join(" ");
-};
-
 export const LanguageCodes = [
 	{
 		id: 54,

@@ -13,7 +13,7 @@ const Result = () => {
 		setLoader(true);
 		(async () => {
 			const response = await (
-				await fetch(`${import.meta.env.VITE_DEV_BACKEND}/data`, {
+				await fetch(`${import.meta.env.VITE_BACKEND}/data`, {
 					method: "GET",
 					headers: {
 						"Content-type": "application/json",
