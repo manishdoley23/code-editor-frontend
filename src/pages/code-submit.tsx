@@ -90,7 +90,7 @@ const CodeSubmit = () => {
 				}, 2000);
 				return;
 			} else {
-				toast("Error in code submission");
+				toast("Submit a code that compiles!!");
 				setProcessing(false);
 				return;
 			}
@@ -158,6 +158,7 @@ const CodeSubmit = () => {
 				<div className="flex flex-col gap-2">
 					<label>Username</label>
 					<input
+						required
 						value={formVal.username}
 						onChange={(e) => {
 							setFormVal((prev) => ({
@@ -215,6 +216,7 @@ const CodeSubmit = () => {
 				<div className="mt-3 flex flex-col gap-2">
 					<label>Custom input</label>
 					<textarea
+						required
 						rows={2}
 						className="border border-black outline-none px-2 py-1"
 						value={formVal.stdInt}
@@ -230,6 +232,7 @@ const CodeSubmit = () => {
 				<div className="mt-3 flex flex-col gap-2">
 					<label>Source code</label>
 					<textarea
+						required
 						rows={5}
 						className="border border-black outline-none px-2 py-1"
 						value={formVal.code}
