@@ -19,14 +19,15 @@ import { Badge } from "@/components/ui/badge";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 
 export const CodeSubmitSchema = z.object({
-    languages: z
-        .array(z.string())
-        .min(1, {
-            message: "Give at least one language to change to",
-        })
-        .max(2, {
-            message: "Max two languages",
-        }),
+    // languages: z
+    //     .array(z.string())
+    //     .min(1, {
+    //         message: "Give at least one language to change to",
+    //     })
+    //     .max(2, {
+    //         message: "Max two languages",
+    //     }),
+    language: z.string(),
     code: z.string().min(1, {
         message: "Type something",
     }),
@@ -41,23 +42,23 @@ export default function SubmitCode() {
         resolver: zodResolver(CodeSubmitSchema),
         defaultValues: {
             code: "",
-            languages: [],
+            language: "",
         },
     });
     const { getValues, setValue, trigger } = form;
 
-    const handleLanguageSubmit = () => {
-        setSelectedLanguages((prev) => [...prev, selectLanguage]);
-        setValue("languages", [...getValues("languages"), selectLanguage]);
-        trigger("languages");
-        setSelectLanguage("");
-    };
-    const removeLanguageSubmit = (idx: number) => {
-        const filtered = selectedLanguages.filter((_, i) => idx !== i);
-        setSelectedLanguages(filtered);
-        setValue("languages", filtered);
-        trigger("languages");
-    };
+    // const handleLanguageSubmit = () => {
+    //     setSelectedLanguages((prev) => [...prev, selectLanguage]);
+    //     setValue("languages", [...getValues("languages"), selectLanguage]);
+    //     trigger("languages");
+    //     setSelectLanguage("");
+    // };
+    // const removeLanguageSubmit = (idx: number) => {
+    //     const filtered = selectedLanguages.filter((_, i) => idx !== i);
+    //     setSelectedLanguages(filtered);
+    //     setValue("languages", filtered);
+    //     trigger("languages");
+    // };
 
     const onSubmit = (data: z.infer<typeof CodeSubmitSchema>) => {
         console.log("here");
@@ -66,7 +67,6 @@ export default function SubmitCode() {
         });
     };
 
-    console.log(getValues("languages"));
     return (
         <div className="min-h-screen flex items-center justify-center">
             <Form {...form}>
@@ -94,25 +94,19 @@ export default function SubmitCode() {
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>
-                                    To which languages you need to translate
+                                    To which language you need to translate
                                 </FormLabel>
                                 <div className="flex gap-2">
-                                    <Input
-                                        value={selectLanguage}
-                                        disabled={isPending}
-                                        onChange={(e) =>
-                                            setSelectLanguage(e.target.value)
-                                        }
-                                    />
-                                    <Button
+                                    <Input disabled={isPending} {...field} />
+                                    {/* <Button
                                         disabled={isPending}
                                         type="button"
                                         onClick={handleLanguageSubmit}
                                     >
                                         <PlusCircledIcon className="mr-2" /> Add
-                                    </Button>
+                                    </Button> */}
                                 </div>
-                                {selectedLanguages.map((lang, idx) => {
+                                {/* {selectedLanguages.map((lang, idx) => {
                                     return (
                                         <Badge
                                             className="m-1"
@@ -124,7 +118,7 @@ export default function SubmitCode() {
                                             {lang}
                                         </Badge>
                                     );
-                                })}
+                                })} */}
                                 <FormMessage />
                             </FormItem>
                         )}

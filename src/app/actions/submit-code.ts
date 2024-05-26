@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { CodeSubmitSchema } from "../submit-code/page";
 import { createClient } from "redis";
+import { randomUUID } from "crypto";
 
 const connectToRedis = () => {
     try {
@@ -22,8 +23,25 @@ export const submitCode = async (
 ) => {
     try {
         const client = connectToRedis();
-        // await client.lPush();
+        client.connect().then(async () => {
+            const id = randomUUID();
+            const redisBody = {
+                problemId: id,
+                code: submitedCode.code,
+                language: submitedCode.language,
+            };
+            console.log("redisBody:", redisBody);
+            const redisBodyStringified = JSON.stringify(redisBody);
+            const res = await client.lPush("problems", redisBodyStringified);
+            if (res) {
+                return {
+                    message: "Success",
+                };
+            }
+        });
+        // console.log("    submitedCode:",     submitedCode);
     } catch (error) {
+        console.log("err:", error);
         throw new Error("Error");
     }
 };
